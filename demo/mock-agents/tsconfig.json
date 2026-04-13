@@ -3,9 +3,8 @@
   "compilerOptions": {
     "outDir": "dist",
     "noEmit": true,
-    "paths": {
-      "trustwire-core": ["../../packages/trustwire-core/src/gate.ts"]
-    }
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": ["./**/*.ts"]
 }

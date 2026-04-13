@@ -60,13 +60,13 @@ await trustwireRecord({ agentId, outcome: "success" });
 ```bash
 npm install
 # Cold start — 5 rounds, all UNKNOWN
-npx ts-node --project demo/mock-agents/tsconfig.json demo/mock-agents/orchestrator.ts --rounds=5
+npx tsx --tsconfig demo/mock-agents/tsconfig.json demo/mock-agents/orchestrator.ts --rounds=5
 
 # Warmup — 20 rounds, trust diverges
-npx ts-node --project demo/mock-agents/tsconfig.json demo/mock-agents/orchestrator.ts --rounds=20
+npx tsx --tsconfig demo/mock-agents/tsconfig.json demo/mock-agents/orchestrator.ts --rounds=20
 
 # Report only
-npx ts-node --project demo/mock-agents/tsconfig.json demo/mock-agents/orchestrator.ts --report
+npx tsx --tsconfig demo/mock-agents/tsconfig.json demo/mock-agents/orchestrator.ts --report
 ```
 
 ## ERC-8004 Export
