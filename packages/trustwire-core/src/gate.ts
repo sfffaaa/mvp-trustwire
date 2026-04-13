@@ -50,8 +50,9 @@ export async function checkTrust(
   try {
     const result = await sidecar.trustScore(agentPubkey);
     score = result.trust_score ?? null;
-  } catch {
-    // timeout or error → treat as unknown
+  } catch (err) {
+    // sidecar timeout or error → treat as unknown per design spec
+    console.warn(`[trustwire] trustScore unavailable for ${agentPubkey}:`, err instanceof Error ? err.message : err);
   }
 
   if (score === null) {
@@ -74,5 +75,9 @@ export async function recordInteraction(
   if (!VALID_OUTCOMES.includes(outcome)) {
     throw new InvalidOutcomeError(outcome);
   }
-  await sidecar.propose(agentPubkey, { type: "task", outcome });
+  try {
+    await sidecar.propose(agentPubkey, { type: "task", outcome });
+  } catch (err) {
+    throw new Error(`[trustwire] Failed to record interaction for ${agentPubkey}: ${err instanceof Error ? err.message : String(err)}`);
+  }
 }

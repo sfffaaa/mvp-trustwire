@@ -23,7 +23,12 @@ export async function exportToERC8004(
 ): Promise<ERC8004Summary> {
   if (!agentPubkey) throw new InvalidAgentError();
 
-  const result = (await sidecar.trustScore(agentPubkey)) as unknown as TrustScoreData;
+  let result: TrustScoreData;
+  try {
+    result = (await sidecar.trustScore(agentPubkey)) as unknown as TrustScoreData;
+  } catch {
+    return { agentId: agentPubkey, score: null, interactionCount: 0, lastUpdated: new Date().toISOString() };
+  }
 
   const score: number | null = result.trust_score ?? null;
   const interactionCount: number = result.interaction_count ?? 0;

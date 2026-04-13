@@ -2,10 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist",
-    "paths": {
-      "trustwire-core": ["../trustwire-core/src/gate.ts"]
-    }
+    "outDir": "dist"
   },
   "include": ["src/**/*"]
 }
