@@ -70,6 +70,7 @@ export async function recordInteraction(
   agentPubkey: string,
   outcome: Outcome
 ): Promise<void> {
+  if (!agentPubkey) throw new InvalidAgentError();
   if (!VALID_OUTCOMES.includes(outcome)) {
     throw new InvalidOutcomeError(outcome);
   }
