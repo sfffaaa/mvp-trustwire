@@ -1,4 +1,4 @@
-export const AGENT_ALPHA_ID = "agent-alpha-pubkey-0xAAA";
+export const AGENT_ALPHA_ID = "a".repeat(64);
 
 export interface TaskResult {
   agentId: string;

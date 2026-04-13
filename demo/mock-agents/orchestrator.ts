@@ -1,7 +1,30 @@
-import { init } from "@trustchain/sdk";
 import { checkTrust, recordInteraction } from "trustwire-core";
-import { AGENT_ALPHA_ID, runTask as runAlpha } from "./agent-alpha";
-import { AGENT_BETA_ID, runTask as runBeta } from "./agent-beta";
+import { AGENT_ALPHA_ID, runTask as runAlpha } from "./agent-alpha.js";
+import { AGENT_BETA_ID, runTask as runBeta } from "./agent-beta.js";
+
+/** In-memory sidecar that mimics the @trustchain/sdk sidecar interface */
+class InMemorySidecar {
+  private data = new Map<string, { successes: number; total: number }>();
+
+  async trustScore(agentPubkey: string): Promise<{ trust_score: number | null }> {
+    const rec = this.data.get(agentPubkey);
+    if (!rec || rec.total === 0) return { trust_score: null };
+    return { trust_score: rec.successes / rec.total };
+  }
+
+  async propose(agentPubkey: string, event: { type: string; outcome: string }): Promise<void> {
+    if (!this.data.has(agentPubkey)) this.data.set(agentPubkey, { successes: 0, total: 0 });
+    const rec = this.data.get(agentPubkey)!;
+    rec.total++;
+    if (event.outcome === "success") rec.successes++;
+  }
+
+  async interactionCount(agentPubkey: string): Promise<number> {
+    return this.data.get(agentPubkey)?.total ?? 0;
+  }
+
+  stop(): void {}
+}
 
 const THRESHOLD = 0.6;
 const args = process.argv.slice(2);
@@ -10,7 +33,7 @@ const ROUNDS = roundsArg ? parseInt(roundsArg.split("=")[1]) : 10;
 const REPORT_ONLY = args.includes("--report");
 
 async function main() {
-  const sidecar = await init({ name: "trustwire-orchestrator" });
+  const sidecar = new InMemorySidecar();
   console.log("Trustwire Orchestrator started\n");
 
   if (REPORT_ONLY) {
@@ -58,7 +81,7 @@ async function main() {
   sidecar.stop();
 }
 
-async function printReport(sidecar: Awaited<ReturnType<typeof init>>) {
+async function printReport(sidecar: InMemorySidecar) {
   console.log("Trust Report:");
   for (const id of [AGENT_ALPHA_ID, AGENT_BETA_ID]) {
     const gate = await checkTrust(sidecar, id, { threshold: THRESHOLD, unknownPolicy: "PASS" });
