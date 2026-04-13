@@ -1,0 +1,12 @@
+{
+  "name": "trustwire-root",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "demo/mock-agents"
+  ],
+  "scripts": {
+    "test": "npm test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
+  }
+}

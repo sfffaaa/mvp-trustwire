@@ -1,0 +1,16 @@
+{
+  "name": "trustwire-demo",
+  "private": true,
+  "scripts": {
+    "start": "ts-node orchestrator.ts"
+  },
+  "dependencies": {
+    "@trustchain/sdk": "^1.0.0",
+    "trustwire-core": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
+}
