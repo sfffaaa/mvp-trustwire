@@ -42,7 +42,9 @@ export async function checkTrust(
   agentPubkey: string,
   config?: Partial<GateConfig>
 ): Promise<GateResult> {
-  if (!agentPubkey) throw new InvalidAgentError();
+  if (!agentPubkey || agentPubkey.length > 256 || /[\r\n]/.test(agentPubkey)) {
+    throw new InvalidAgentError();
+  }
 
   const { threshold, unknownPolicy } = { ...DEFAULT_CONFIG, ...config };
 
@@ -71,7 +73,9 @@ export async function recordInteraction(
   agentPubkey: string,
   outcome: Outcome
 ): Promise<void> {
-  if (!agentPubkey) throw new InvalidAgentError();
+  if (!agentPubkey || agentPubkey.length > 256 || /[\r\n]/.test(agentPubkey)) {
+    throw new InvalidAgentError();
+  }
   if (!VALID_OUTCOMES.includes(outcome)) {
     throw new InvalidOutcomeError(outcome);
   }

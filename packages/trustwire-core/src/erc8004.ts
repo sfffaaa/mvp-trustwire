@@ -21,7 +21,9 @@ export async function exportToERC8004(
   sidecar: Sidecar,
   agentPubkey: string
 ): Promise<ERC8004Summary> {
-  if (!agentPubkey) throw new InvalidAgentError();
+  if (!agentPubkey || agentPubkey.length > 256 || /[\r\n]/.test(agentPubkey)) {
+    throw new InvalidAgentError();
+  }
 
   let result: TrustScoreData;
   try {
