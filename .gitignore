@@ -2,3 +2,7 @@ node_modules/
 dist/
 *.tgz
 .trustchain/
+coverage/
+# compiled output alongside source (ts-jest artefacts)
+packages/**/*.js
+packages/**/*.d.ts
